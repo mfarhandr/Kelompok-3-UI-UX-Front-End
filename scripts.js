@@ -1,3 +1,4 @@
+//Buku Terbaru dan Terpopuler
 class perBuku extends HTMLElement{
   constructor(){
     super();
@@ -175,6 +176,7 @@ class perBuku extends HTMLElement{
     
 }
 
+//List Buku
 class catBuku extends HTMLElement{
   constructor(){
     super();
@@ -319,7 +321,7 @@ window.customElements.define('cat-buku',catBuku);
 
 //cara menggunakan komponen
 
-async function ambildata(){
+async function ambildataBukuTerbaruTerpopuler(){
   const options ={
     headers:{'Content-Type':'application/json'}
   };
@@ -347,7 +349,7 @@ async function ambildata(){
   workspace.appendChild(temp3);
 }
 
-async function getdata(){
+async function ambildataListbuku(){
   const options ={
     headers:{'Content-Type':'application/json'}
   };
@@ -371,5 +373,5 @@ async function getdata(){
   });
 }
 
-ambildata();
-getdata();
+ambildataBukuTerbaruTerpopuler();
+ambildataListbuku();
