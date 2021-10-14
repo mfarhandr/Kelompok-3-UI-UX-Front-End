@@ -312,12 +312,24 @@ class listBuku extends HTMLElement{
   }
 }
 
+class filterBuku extends HTMLElement{
+  constructor(){
+    super();
+   //this.root = this.attachShadow({mode: 'open'});
+  }
+  set filter(filter){
+    this.innerHTML = `
+        <a href="#" onclick="ambildataListBukuKategori('${filter.kategori}')">${filter.kategori.toUpperCase()}</a>        
+    `;
+  }
+}
 
 
 
 window.customElements.define('per-buku',perBuku);
 window.customElements.define('list-buku',listBuku);
 window.customElements.define('cat-buku',catBuku);
+window.customElements.define('filter-buku',filterBuku);
 
 //cara menggunakan komponen
 
@@ -349,7 +361,12 @@ async function ambildataBukuTerbaruTerpopuler(){
   workspace.appendChild(temp3);
 }
 
-async function ambildataListbuku(){
+async function ambildataListBuku(){
+
+  document.getElementById("areafilter").innerHTML = `
+      <a href="#" onclick="ambildataListBuku()">All</a>
+  `;
+
   const options ={
     headers:{'Content-Type':'application/json'}
   };
@@ -358,14 +375,19 @@ async function ambildataListbuku(){
   data = await dtbuku.json();
   
   var tempCatCheck = "-";
+  document.getElementById("areakerja").innerHTML = "";
+
   data.forEach(items=>{
       const daftar = document.createElement('list-buku');
       const tempCat = document.createElement('cat-buku');
+      const tempFilter = document.createElement('filter-buku');
 
       tempCat.category = items;
+      tempFilter.filter = items;
       if (tempCatCheck != items.kategori) {
         tempCatCheck = items.kategori;
         areakerja.appendChild(tempCat);
+        areafilter.appendChild(tempFilter);
       }
       
       daftar.buku = items;
@@ -373,5 +395,38 @@ async function ambildataListbuku(){
   });
 }
 
+async function ambildataListBukuKategori(kategori){
+  const options ={
+    headers:{'Content-Type':'application/json'}
+  };
+ 
+  const dtbuku = await fetch('https://dmujitempbagifile.s3.ap-southeast-1.amazonaws.com/buku.json');
+  data = await dtbuku.json();
+  
+  var tempCatCheck = "-";
+  document.getElementById("areakerja").innerHTML = "";
+
+  data.forEach(items=>{
+      const daftar = document.createElement('list-buku');
+      const tempCat = document.createElement('cat-buku');
+
+      tempCat.category = items;
+      if (kategori == items.kategori) {
+        if (tempCatCheck != items.kategori) {
+          tempCatCheck = items.kategori;
+          areakerja.appendChild(tempCat);
+        }
+  
+        daftar.buku = items;
+        areakerja.appendChild(daftar);
+      }
+      
+      
+  });
+}
+
+//panggil fungsi
+
 ambildataBukuTerbaruTerpopuler();
-ambildataListbuku();
+
+ambildataListBuku();
